@@ -6,7 +6,29 @@ import Login from "./components/Login";
 function App() {
   const [count, setCount] = useState(0);
 
-  return <div className="App">{/* <Login></Login> */}</div>;
+  const navItems = ["Home", "Messages", "Profile"];
+
+  const renderNavItems = (navItems: any) => {
+    return navItems.map((el) => {
+      return (
+        <a>
+          <li key={el}>
+            <img src={`/src/assets/img/${el}.png`} className="navIcons" />
+            <p>{el}</p>
+          </li>
+        </a>
+      );
+    });
+  };
+  return (
+    <div className="App">
+      {/* <Login></Login> */}
+      <nav>
+        <div className="navLogo"></div>
+        <ul>{renderNavItems(navItems)}</ul>
+      </nav>
+    </div>
+  );
 }
 
 export default App;
