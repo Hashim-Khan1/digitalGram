@@ -9,7 +9,7 @@ function App() {
   const navItems = ["Home", "Messages", "Profile"];
 
   const renderNavItems = (navItems: any) => {
-    return navItems.map((el) => {
+    return navItems.map((el: string) => {
       return (
         <a>
           <li key={el}>
@@ -23,6 +23,7 @@ function App() {
   return (
     <div className="App">
       {/* <Login></Login> */}
+
       <nav>
         <div className="navLogo"></div>
         <ul>{renderNavItems(navItems)}</ul>

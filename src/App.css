@@ -83,7 +83,6 @@ nav ul li {
 nav ul li p{
   color: silver;
   font-size: 20px;
-
 }
 .navLogo{
   width: 150px;
@@ -99,6 +98,62 @@ nav ul li p{
   height: 25px;
   margin-right: 12px;
   filter: brightness(0) invert(1);
-  /* border: 1px solid red; */
-
+}
+@media only screen and (max-width:1920px) {
+  nav{
+    width: 270px;
+  }
+}
+@media only screen and (max-width:1262px) {
+  nav{
+    align-items: center;
+    width: 80px;
+    padding: 15px 15px;
+  }
+  .navLogo{
+    width: 26px;
+    background: url(/src/assets/img/mobileLogo.png);
+    background-position: center;
+    background-size: contain;
+    filter: brightness(0) invert(1);
+    background-repeat: no-repeat;
+  }
+  nav ul li p{
+    display: none;
+  }
+  .navIcons{
+    margin-right: 0;
+  }
+}
+@media only screen and (max-width:760px) {
+  nav{
+    display: flex;
+    flex-direction: row;
+    border-right: 0;
+    border-top: 1px solid rgba(128, 128, 128, 0.123);
+    bottom: 0;
+    height: 50px;
+    padding: 0;
+    width: 100%;
+    justify-content: center;
+    justify-items: center;
+    
+  }
+  .navIcons{
+    margin-right: 0;
+    margin: 0 15px;;
+  }
+  nav ul{
+    display: flex;
+    align-items: center;
+  }
+  nav ul a {
+    height: 30px;
+    max-height: max-content;
+  }
+  .navLogo{
+    height: 100%;
+    margin-right: 15px ;
+    /* border: 1px solid red; */
+  }
 }
