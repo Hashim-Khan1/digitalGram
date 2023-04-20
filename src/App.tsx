@@ -11,6 +11,18 @@ function App() {
     <div className="App">
       {/* <Login></Login> */}
       <Nav />
+      <div id="container">
+        <div className="postContainer">
+          <div id="searchContainer">
+            <input
+              type="text"
+              className="searchInpt"
+              placeholder="Search Username"
+            />
+            <div id="search"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
