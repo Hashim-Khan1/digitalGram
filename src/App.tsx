@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Login from "./components/Login";
 import Nav from "./components/Nav";
+import Posts from "./components/Posts";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -21,33 +22,7 @@ function App() {
             />
             <div id="search"></div>
           </div>
-          <div className="postContainer">
-            <div
-              className="row"
-              style={{ alignItems: "center", marginBottom: "10px" }}
-            >
-              <div className="profileImg"></div>
-              <p>USERNAME</p>
-              <p>7ds</p>
-            </div>
-            <div className="postImg"></div>
-            <div
-              className="row"
-              style={{ alignItems: "center", margin: "10px 0" }}
-            >
-              <div className="postIcons heart"></div>
-              <div className="postIcons comment"></div>
-              <div className="postIcons send"></div>
-            </div>
-            <p>111,000 likes</p>
-            <p>
-              {" "}
-              <b>Uername</b> Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Perspiciatis autem quis dolore molestiae, minima quia
-              veritatis impedit facilis! Neque, eos.{" "}
-            </p>
-            <p className="greyText">View all comments 115 </p>
-          </div>
+          {/* <Posts /> */}
         </div>
       </div>
     </div>
