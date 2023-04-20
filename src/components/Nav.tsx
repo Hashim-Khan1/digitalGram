@@ -1,5 +1,5 @@
 function Nav() {
-  const navItems = ["Home", "Messages", "Profile"];
+  const navItems = ["Home", "Search", "Messages", "Profile"];
 
   const renderNavItems = (navItems: any) => {
     return navItems.map((el: string) => {
