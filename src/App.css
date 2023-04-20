@@ -103,13 +103,15 @@ nav ul li p{
 #container{
   width: calc(100% - 370px );  
   height: 100vh;
+  max-height: 100vh;
+  overflow-y: scroll;
   margin: 0 0 0 auto;
   padding: 15px 5px;
   display: flex;
   justify-content: center;
 }
-.postContainer{
-  width: 720px;
+.mainBody{
+  width: 520px;
 }
 #searchContainer{
   width: 100%;
@@ -136,7 +138,68 @@ nav ul li p{
   background-repeat: no-repeat;
   filter: brightness(0) invert(1);
   color: silver;
+}
+.postContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid red; */
+  margin: 20px 0;
+}
+.postContainer div:first-child p{
+  font-size: 14px;
+  padding: 0 8px;
+}
+.profileImg{
+  width:  35px;
+  height: 35px;
+  margin-right: 5px;
+  border-radius: 999px;
+  border: 1px solid black ;
+}
+.postImg{
+  width: 100%;
+  height: 350px;
+  border: 1px solid red;
+}
+.postIcons{
+  width:  30px;
+  height: 30px;
+  margin: 0 10px;
 
+}
+.heart{
+  background: url(/src/assets/img/heart.png);
+  background-position: center;
+  background-size: contain;
+  filter: brightness(0) invert(1);
+  
+}
+.comment{
+  background: url(/src/assets/img/heart.png);
+  background-position: center;
+  background-size: contain;
+  filter: brightness(0) invert(1);
+
+}
+.send{
+  background: url(/src/assets/img/messages.png);
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  transform: rotate(10deg);
+  filter: brightness(0) invert(1);
+
+}
+.heartActive{
+  background: url(/src/assets/img/activeHeart.png);
+  background-position: center;
+  background-size: contain;
+  animation: expand 0.5s forwards;
+}
+.greyText{
+  padding: 5px 0;
+  color: grey;
 }
 @media only screen and (max-width:1920px) {
   nav{
@@ -172,7 +235,7 @@ nav ul li p{
   }
 }
 @media only screen and (max-width:884px) {
-  .postContainer{
+  .mainBody{
     width: 100%;
   }
 }
@@ -188,7 +251,8 @@ nav ul li p{
     width: 100%;
     justify-content: center;
     justify-items: center;
-    
+    z-index: 1;
+    background-color: #1b1d20;
   }
   .navIcons{
     margin-right: 0;
@@ -212,4 +276,9 @@ nav ul li p{
     height: calc(100vh - 50px);
     margin: 0 auto;
   }
+}
+@keyframes expand {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
