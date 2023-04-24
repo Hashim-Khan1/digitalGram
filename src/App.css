@@ -101,14 +101,16 @@ nav ul li p{
   filter: brightness(0) invert(1);
 }
 #container{
+  display: flex;
+  flex-direction: column;
   width: calc(100% - 370px );  
   height: 100vh;
   max-height: 100vh;
   overflow-y: scroll;
   margin: 0 0 0 auto;
   padding: 15px 5px;
-  display: flex;
-  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
 }
 .mainBody{
   width: 520px;
@@ -116,9 +118,9 @@ nav ul li p{
 #searchContainer{
   width: 100%;
   border: 2px solid rgba(128, 128, 128, 0.123);
-  background-color: transparent;border-radius: 6px;
+  background-color: transparent;
+  border-radius: 6px;
   display: flex;
-
 }
 .searchInpt{
   padding: 8px 12px;
@@ -182,6 +184,13 @@ nav ul li p{
   filter: brightness(0) invert(1);
 
 }
+.phone{
+  background: url(/src/assets/img/phone.png);
+  background-position: center;
+  background-size: contain;
+  filter: brightness(0) invert(1);
+  margin-left: auto;
+}
 .send{
   background: url(/src/assets/img/messages.png);
   background-position: center;
@@ -200,6 +209,34 @@ nav ul li p{
 .greyText{
   padding: 5px 0;
   color: grey;
+}
+#messageContainer{
+  width: 75%;
+  height: 100%;
+}
+#userMsgContainer{
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  border-right: 1px solid rgba(128, 128, 128, 0.123);
+}
+.userBox{
+  margin-top: 10px;
+  padding: 7px 12px;
+  border-bottom:1px solid rgba(128, 128, 128, 0.123) ;
+}
+.userProfile{
+  min-width:  35px;
+  min-height: 35px;
+  border-radius: 999px;
+  margin-right: 10px;
+  border: 1px solid blue;
+}
+#msgHeader{
+  padding: 5px 12px;
+width: 100%;
+height: 60px;
+border-bottom: 1px solid rgba(128, 128, 128, 0.123);
 }
 @media only screen and (max-width:1920px) {
   nav{
@@ -235,7 +272,7 @@ nav ul li p{
   }
 }
 @media only screen and (max-width:884px) {
-  .mainBody{
+  .mainBody,#messageContainer{
     width: 100%;
   }
 }
@@ -275,6 +312,12 @@ nav ul li p{
     width: 95%;
     height: calc(100vh - 50px);
     margin: 0 auto;
+  }
+  #userMsgContainer{
+    width: 60px;
+  }
+  .userBox p{
+    display: none;
   }
 }
 @keyframes expand {

@@ -24,6 +24,25 @@ function App() {
           </div>
           {/* <Posts /> */}
         </div>
+        <div
+          id="messageContainer"
+          className="row"
+          style={{ border: "1px solid rgba(128, 128, 128, 0.123)" }}
+        >
+          <div id="userMsgContainer">
+            <div className="userBox row alignCenter">
+              <div className="userProfile"></div>
+              <p>Username</p>
+            </div>
+          </div>
+          <div id="msgHeader" className="row alignCenter">
+            <p style={{ fontSize: "18px" }}>Username</p>
+            <div
+              className="navIcons phone"
+              style={{ marginLeft: "auto" }}
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   );
