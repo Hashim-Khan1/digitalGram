@@ -168,7 +168,6 @@ nav ul li p{
   width:  30px;
   height: 30px;
   margin: 0 10px;
-
 }
 .heart{
   background: url(/src/assets/img/heart.png);
@@ -264,6 +263,37 @@ nav ul li p{
   color: black;
   border-radius: 5px 1px 1px 5px;
   text-align: end;
+}
+#profileLarge{
+  width:  150px;
+  height: 150px;
+  border-radius: 999px;
+  margin-right: 25px;
+  border: 1px solid red;
+}
+#profileControls{
+  display: flex;
+}
+#userInfoBox{
+  margin: 10px 0;
+}
+.profileControlsBtn{
+  background-color: white;
+  padding: 5px 22px;
+  height: 30px;
+  border-radius: 5px;
+  margin: 0 10px;
+  color: black;
+  cursor: pointer;
+}
+#postsContentContainer{
+  display: flex;
+  flex-wrap: wrap;
+}
+.posts{
+  width: 320px;
+  height: 120px;
+  border: 1px solid red;
 }
 @media only screen and (max-width:1920px) {
   nav{
