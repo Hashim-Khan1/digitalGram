@@ -1,6 +1,10 @@
 import { useState } from "react";
+import dotenv from "dotenv";
+import axios from "axios";
+const { VITE_API_URL } = import.meta.env;
 
 function Register() {
+  console.log(VITE_API_URL);
   const [FormValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -14,8 +18,16 @@ function Register() {
       [key]: name,
     }));
   };
-  const submitForm = (e: any) => {
-    console.log(FormValues);
+  const instance = axios.create({ baseURL: VITE_API_URL });
+  const submitForm = async (e: any) => {
+    const dataString = JSON.stringify(FormValues);
+    console.log(dataString);
+
+    const res = await instance.post("/user/create-user", {
+      data: dataString,
+    });
+    console.log(res);
+    // console.log(FormValues);
   };
   return (
     <>
