@@ -1,45 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import SignIn from "./Login/SignIn";
+import Register from "./Login/Register";
 function Login() {
-  const [FormValues, setFormValues] = useState({
-    email: "",
-    password: "",
-  });
-  const udpateValues = (e: any) => {
-    const key = e.currentTarget.name;
-    const name = e.currentTarget.value;
-    setFormValues((values) => ({
-      ...values,
-      [key]: name,
-    }));
-  };
-  const submitForm = (e: any) => {
-    console.log(FormValues);
+  const [formState, setFormState] = useState("Register");
+  const changeForm = (e: any) => {
+    if (e.currentTarget.innerText == "Register") {
+      setFormState("Login");
+    } else {
+      setFormState("Register");
+    }
   };
   return (
     <>
       <div style={{ backgroundColor: "white", width: "100%", height: "100vh" }}>
         <div id="loginContainer">
           <img src="src/assets/img/logo.png" id="loginLogo" />
-          <input
-            type="text"
-            className="inputField"
-            placeholder="Username"
-            onChange={udpateValues}
-            name="email"
-          />
-          <input
-            type="text"
-            className="inputField"
-            placeholder="Password"
-            onChange={udpateValues}
-            name="password"
-          />
-          <input
-            type="submit"
-            className="sbtn"
-            style={{ marginTop: "10px" }}
-            onClick={submitForm}
-          />
+          {formState == "Register" ? <SignIn /> : <Register />}
+
           <div
             className="row alignCenter"
             style={{ width: "100%", margin: "10px 0" }}
@@ -48,8 +25,8 @@ function Login() {
             <p style={{ width: "max-content" }}>OR</p>
             <div className="lineSeperator"></div>
           </div>
-          <p>
-            <b>Register</b>
+          <p style={{ cursor: "pointer" }} onClick={changeForm}>
+            <b>{formState}</b>
           </p>
         </div>
       </div>
