@@ -5,11 +5,11 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 
 router.post("/create-user", async (req, res) => {
-  const { email, password, username } = req.body;
+  const { data } = req.body;
+  const parseData = JSON.parse(data);
+  const { email, username, password } = parseData;
 
   const hashedPassword = await hashPassword(password);
-
-  // createUser(email, username, hashedPassword);
 
   if ((await isUserExists(username)) == false) {
     console.log("user doesnt exist, create the user");
