@@ -1,9 +1,11 @@
 import { useState } from "react";
+import axios from "axios";
+const { VITE_API_URL } = import.meta.env;
 
-function SignIn() {
+function SignIn(props: any) {
   const [FormValues, setFormValues] = useState({
     email: "",
-    password: "",
+    clientPassword: "",
   });
   const udpateValues = (e: any) => {
     const key = e.currentTarget.name;
@@ -13,15 +15,22 @@ function SignIn() {
       [key]: name,
     }));
   };
-  const submitForm = (e: any) => {
-    console.log(FormValues);
+  const instance = axios.create({ baseURL: VITE_API_URL });
+  const submitForm = async (e: any) => {
+    const dataString = JSON.stringify(FormValues);
+    console.log(dataString);
+
+    const res = await instance.post("/user/login", {
+      data: dataString,
+    });
+    props.responseData(res.data);
   };
   return (
     <>
       <input
         type="text"
         className="inputField"
-        placeholder="Username"
+        placeholder="Username or email"
         onChange={udpateValues}
         name="email"
       />
@@ -30,7 +39,7 @@ function SignIn() {
         className="inputField"
         placeholder="Password"
         onChange={udpateValues}
-        name="password"
+        name="clientPassword"
       />
       <input
         type="submit"

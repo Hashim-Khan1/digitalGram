@@ -33,5 +33,8 @@ const createUser = async (email, username, password) => {
     [email, username, password, UUID]
   );
 };
+const verifyPassword = async (plainPassword, hashedPassword) => {
+  return bcrypt.compareSync(plainPassword, hashedPassword);
+};
 
-module.exports = { hashPassword, createUser, isUserExists };
+module.exports = { hashPassword, createUser, isUserExists, verifyPassword };
