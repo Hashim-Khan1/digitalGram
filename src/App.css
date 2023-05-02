@@ -316,6 +316,18 @@ nav ul li p{
   height: 120px;
   border: 1px solid red;
 }
+#ResponseContainer{
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  border-radius: 5px;
+  width: 350px;
+  padding: 10px 20px;
+  margin: 0px auto;
+
+}
 @media only screen and (max-width:1920px) {
   nav{
     width: 270px;
