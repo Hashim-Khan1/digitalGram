@@ -31,7 +31,7 @@ function Login() {
         <div id="loginContainer">
           <img src="src/assets/img/logo.png" id="loginLogo" />
           {formState == "Register" ? (
-            <SignIn />
+            <SignIn responseData={handleResponse} />
           ) : (
             <Register responseData={handleResponse} />
           )}
