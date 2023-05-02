@@ -1,9 +1,10 @@
 import { useState } from "react";
 import dotenv from "dotenv";
 import axios from "axios";
+import ResponseBox from "../ResponseBox";
 const { VITE_API_URL } = import.meta.env;
 
-function Register() {
+function Register(props: any) {
   console.log(VITE_API_URL);
   const [FormValues, setFormValues] = useState({
     email: "",
@@ -26,8 +27,8 @@ function Register() {
     const res = await instance.post("/user/create-user", {
       data: dataString,
     });
-    console.log(res);
-    // console.log(FormValues);
+    console.log(res.data);
+    props.responseData(res.data);
   };
   return (
     <>
