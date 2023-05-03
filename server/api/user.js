@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const cookieParser = require("cookie-parser");
-
+const bodyParser = require("body-parser");
 const {
   hashPassword,
   createUser,
@@ -9,10 +8,8 @@ const {
   verifyPassword,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
-const bodyParser = require("body-parser");
 
 router.use(bodyParser.json());
-router.use(cookieParser());
 
 router.post("/create-user", async (req, res) => {
   const { data } = req.body;
@@ -55,10 +52,11 @@ router.post("/login", async (req, res) => {
       true
   ) {
     const JWTtoken = await createJWT(username, "jwt");
-    res.cookie("access-token", "sss");
     res.status(201).send({
       message: "Login successfully",
       status: "successful",
+      isAuth: true,
+      authToken: JWTtoken,
     });
   } else {
     res.status(201).send({
