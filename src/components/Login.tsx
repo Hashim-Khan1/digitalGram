@@ -1,8 +1,13 @@
 import { useState } from "react";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
 import SignIn from "./Login/SignIn";
 import Register from "./Login/Register";
 import ResponseBox from "./ResponseBox";
+
 function Login() {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState("Register");
   const [formResponse, setFormResponse] = useState();
   const changeForm = (e: any) => {
@@ -15,6 +20,14 @@ function Login() {
   const handleResponse = (data: any) => {
     console.log(data, "yes");
     setFormResponse(data);
+    if (data.isAuth == true) {
+      Cookies.set("authToken", data.authToken, { expires: 7 });
+
+      setTimeout(() => {
+        console.log("yola");
+        navigate("/home");
+      }, 1500);
+    }
   };
   return (
     <>
