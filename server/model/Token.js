@@ -7,4 +7,14 @@ const createJWT = async (username) => {
   });
   return res;
 };
-module.exports = { createJWT };
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.ACCESS_TOKEN);
+    console.log(res);
+    res;
+    console.log(res);
+  } catch (err) {
+    return false;
+  }
+};
+module.exports = { createJWT, verifyToken };
