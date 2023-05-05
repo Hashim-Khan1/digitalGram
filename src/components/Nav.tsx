@@ -2,7 +2,7 @@ import Auth from "../hooks/Auth";
 
 function Nav() {
   Auth();
-  const navItems = ["Home", "Search", "Messages", "Profile"];
+  const navItems = ["Home", "Search", "Create", "Messages", "Profile"];
 
   const renderNavItems = (navItems: any) => {
     return navItems.map((el: string) => {
