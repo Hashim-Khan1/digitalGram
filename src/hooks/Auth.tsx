@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 const { VITE_API_URL } = import.meta.env;
 
 function Auth() {
+  const [userinfo, setUserInfo] = useState();
   const Navigate = useNavigate();
   const checkToken = async () => {
     const cookieVal = Cookies.get("authToken");
@@ -16,7 +17,7 @@ function Auth() {
       if (res.data.isAuth == false) {
         Navigate("/");
       }
-      console.log(res.data.isAuth);
+      setUserInfo(res.data.isAuth);
     } else {
       Navigate("/");
     }
@@ -24,6 +25,6 @@ function Auth() {
   useEffect(() => {
     checkToken();
   }, []);
-  return;
+  return userinfo;
 }
 export default Auth;
