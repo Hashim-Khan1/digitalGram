@@ -1,4 +1,7 @@
+import Auth from "../hooks/Auth";
+
 function Nav() {
+  Auth();
   const navItems = ["Home", "Search", "Messages", "Profile"];
 
   const renderNavItems = (navItems: any) => {
