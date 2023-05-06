@@ -137,11 +137,13 @@ nav ul li p{
   width: 520px;
 }
 #searchContainer{
-  width: 100%;
+  width: 520px;
   border: 2px solid rgba(128, 128, 128, 0.123);
   background-color: transparent;
   border-radius: 6px;
   display: flex;
+  top: 0;
+  left: 370px;
 }
 .searchInpt{
   padding: 8px 12px;
@@ -326,11 +328,29 @@ nav ul li p{
   width: 350px;
   padding: 10px 20px;
   margin: 0px auto;
-
+}
+#Modal{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width:calc( 100% - 375px);
+  margin-right: auto;
+  right: 0;
+  height: 100%;
+  position: absolute;
+  border: 1px solid red;
+}
+#createPost{
+  width: 520px;
+  border: 1px solid green;
 }
 @media only screen and (max-width:1920px) {
   nav{
     width: 270px;
+  }
+  #Modal{
+  width:calc( 100% - 270px);
+
   }
   #container{
     width: calc(100% - 270px );  
@@ -342,6 +362,10 @@ nav ul li p{
     width: 80px;
     padding: 15px 15px;
   }
+  #Modal{
+    width:calc( 100% - 80px);
+  
+    }
   .navLogo{
     width: 26px;
     background: url(/src/assets/img/mobileLogo.png);
@@ -361,7 +385,7 @@ nav ul li p{
   }
 }
 @media only screen and (max-width:884px) {
-  .mainBody,#messageContainer{
+  .mainBody,#messageContainer, #searchContainer{
     width: 100%;
   }
 }
@@ -380,6 +404,9 @@ nav ul li p{
     z-index: 1;
     background-color: #1b1d20;
   }
+  #Modal{
+    width:calc( 100%);
+    }
   .navIcons{
     margin-right: 0;
     margin: 0 15px;;
