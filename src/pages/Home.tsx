@@ -7,14 +7,6 @@ function Home() {
       <Nav />
       <div id="container">
         <div className="mainBody">
-          <div id="searchContainer">
-            <input
-              type="text"
-              className="searchInpt"
-              placeholder="Search Username"
-            />
-            <div id="search"></div>
-          </div>
           <Posts />
         </div>
       </div>
