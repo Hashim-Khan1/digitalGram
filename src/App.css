@@ -338,11 +338,47 @@ nav ul li p{
   right: 0;
   height: 100%;
   position: absolute;
-  border: 1px solid red;
+  background-color: rgba(0, 0, 0, 0.623);
+  z-index: 1;
 }
 #createPost{
-  width: 520px;
+  padding: 15px 10px;
+  width: 850px;
+  background-color: #1b1d20;
+  border-radius: 5px;
+}
+.smlImgs{
+  width:  25px;
+  height: 25px;
   border: 1px solid green;
+  cursor: pointer;
+}
+#addLabel{
+  font-size: 30px;
+}
+#imgContainer{
+  width: 60%;
+}
+#upload-photo {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+#bigImg{
+  width: 100%;
+  height: 215px;
+  border: 1px solid red;
+}
+textarea{
+  resize: none;
+}
+.submitDark{
+  border: 2px solid rgba(128, 128, 128, 0.123);
+  padding: 5px 12px;
+  background-color: #1b1d20;
+  margin-top: 10px;
+  cursor: pointer;
+
 }
 @media only screen and (max-width:1920px) {
   nav{
