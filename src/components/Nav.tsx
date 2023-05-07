@@ -10,14 +10,17 @@ function Nav() {
   const [modalStatus, setModalStatus] = useState(false);
   const [modalTypeInfo, setmodalType] = useState("");
 
-  const checkStatus = (currentItem: string, checkItem: string, modalStatus) => {
+  const checkStatus = (
+    currentItem: string,
+    checkItem: string,
+    modalStatus: boolean
+  ) => {
     if (currentItem != checkItem || modalStatus == false) {
       setModalStatus((prev) => !prev);
     }
   };
 
   const handleClick = (item: string) => {
-    console.log(modalStatus);
     setmodalType(item);
     switch (item) {
       case "Home":
@@ -31,9 +34,11 @@ function Nav() {
         checkStatus(modalTypeInfo, "Search", modalStatus);
         break;
       case "Messages":
+        setModalStatus(false);
         navigate("/Inbox");
         break;
       case "Profile":
+        setModalStatus(false);
         navigate("/Profile");
         break;
     }
