@@ -1,19 +1,47 @@
 import { useState } from "react";
+import { v4 as uuid } from "uuid";
+const { VITE_API_URL } = import.meta.env;
+import axios from "axios";
+
 function CreatePost() {
   const [images, setImages] = useState<string[]>([]);
+  const [fileList, setFileList] = useState([]);
+
+  const instance = axios.create({
+    baseURL: VITE_API_URL,
+  });
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
 
   const handleUpload = (e: any) => {
     const files = e.target.files;
     const imgArray: string[] = [];
+    const currentFile = e.target.files;
+
+    setFileList((prev) => [...prev, ...currentFile]);
+
     for (let i = 0; i < files.length; i++) {
       const reader = new FileReader();
-
       reader.onload = () => {
         imgArray.push(reader.result as string);
         setImages((prevImages) => [...prevImages, ...imgArray]);
       };
       reader.readAsDataURL(files[i]);
     }
+  };
+  const onSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append("files", file);
+    });
+    const captionInput = document.getElementById("captionInput");
+    formData.append("caption", captionInput.value);
+    console.log(fileList, "All the files");
+    const res = await instance.post("/post/create-post", formData, config);
   };
   return (
     <>
@@ -23,6 +51,7 @@ function CreatePost() {
           action=""
           encType="multipart/form-data"
           style={{ display: "flex" }}
+          method="post"
         >
           <div
             id="imgContainer"
@@ -46,7 +75,7 @@ function CreatePost() {
               </label>
               <input
                 type="file"
-                name="photo"
+                name="files"
                 id="upload-photo"
                 multiple
                 onChange={handleUpload}
@@ -60,20 +89,18 @@ function CreatePost() {
                 border: "2px solid rgba(128, 128, 128, 0.123)",
                 width: "100%",
               }}
-              name=""
+              id="captionInput"
+              name="caption"
               className="searchInpt"
               placeholder="Add caption max"
             ></textarea>
+
             <input
-              type="text"
-              className="searchInpt"
-              placeholder="Add Title"
-              style={{
-                border: "2px solid rgba(128, 128, 128, 0.123)",
-                width: "100%",
-              }}
+              type="submit"
+              value="Add post"
+              className="submitDark"
+              onClick={onSubmitHandler}
             />
-            <input type="submit" value="Add post" className="submitDark" />
           </div>
         </form>
       </div>
