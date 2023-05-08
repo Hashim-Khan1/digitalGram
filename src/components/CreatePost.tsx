@@ -2,8 +2,10 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 const { VITE_API_URL } = import.meta.env;
 import axios from "axios";
+import Auth from "../hooks/Auth";
 
 function CreatePost() {
+  const userResult = Auth();
   const [images, setImages] = useState<string[]>([]);
   const [fileList, setFileList] = useState([]);
 
@@ -15,7 +17,6 @@ function CreatePost() {
       "Content-Type": "multipart/form-data",
     },
   };
-
   const handleUpload = (e: any) => {
     const files = e.target.files;
     const imgArray: string[] = [];
@@ -40,7 +41,9 @@ function CreatePost() {
     });
     const captionInput = document.getElementById("captionInput");
     formData.append("caption", captionInput.value);
-    console.log(fileList, "All the files");
+    const { data } = userResult;
+    formData.append("username", data);
+
     const res = await instance.post("/post/create-post", formData, config);
   };
   return (
