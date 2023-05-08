@@ -1,6 +1,5 @@
 const { Client } = require("cassandra-driver");
 require("dotenv").config();
-const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
 const client = new Client({
   cloud: {
@@ -16,12 +15,22 @@ const getData = async () => {
   console.log(rows);
 };
 
-const uploadPost = () => {
-  // const storage = multer.diskStorage({
-  //   destination: function (req, file, cb) {
-  //     cb(null, "../tmp/uploades");
-  //   },
-  // });
-  // console.log("sss");
+const uploadPost = (postID, username, tableID, typeOFPost) => {
+  const date = new Date();
+  const newDate = date.toString();
+  const query =
+    "INSERT INTO useractivities.posts (postid, createdby, date, tableid, typeofpost) VALUES (?, ?, ?, ?, ?)";
+
+  client.execute(query, [postID, username, newDate, tableID, typeOFPost], {
+    prepare: true,
+  });
+  // "INSERT INTO useractivities.posts (postid, createdby, date, tableid, typeofpost) VALUES (?, ?, ?, ?, ?)";
 };
-module.exports = { getData };
+const uploadPostInfo = (postID, pictureURL, caption, likes) => {
+  const query =
+    "INSERT INTO useractivities.postpictureinfo (postid, pictureURL, caption, likes) VALUES (?, ?, ?, ?)";
+  client.execute(query, [postID, pictureURL, caption, likes], {
+    prepare: true,
+  });
+};
+module.exports = { getData, uploadPost, uploadPostInfo };
