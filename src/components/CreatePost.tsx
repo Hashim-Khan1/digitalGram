@@ -4,7 +4,7 @@ const { VITE_API_URL } = import.meta.env;
 import axios from "axios";
 import Auth from "../hooks/Auth";
 
-function CreatePost() {
+function CreatePost(props: any) {
   const userResult = Auth();
   const [images, setImages] = useState<string[]>([]);
   const [fileList, setFileList] = useState([]);
@@ -45,6 +45,7 @@ function CreatePost() {
     formData.append("username", data);
 
     const res = await instance.post("/post/create-post", formData, config);
+    props.response(res.data);
   };
   return (
     <>

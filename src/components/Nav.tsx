@@ -2,6 +2,7 @@ import { useState } from "react";
 import Auth from "../hooks/Auth";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
+import ResponseBox from "./ResponseBox";
 
 function Nav() {
   Auth();
@@ -9,6 +10,7 @@ function Nav() {
   const navItems = ["Home", "Search", "Create", "Messages", "Profile"];
   const [modalStatus, setModalStatus] = useState(false);
   const [modalTypeInfo, setmodalType] = useState("");
+  const [formResponse, setFormResponse] = useState(false);
 
   const checkStatus = (
     currentItem: string,
@@ -55,9 +57,29 @@ function Nav() {
       );
     });
   };
+  const handleModalResponse = (data: any) => {
+    console.log(data);
+    setFormResponse(data);
+    setTimeout(() => {
+      setFormResponse(false);
+      setModalStatus(false);
+    }, 2000);
+  };
   return (
     <>
-      {modalStatus != false ? <Modal modalType={modalTypeInfo} /> : ""}
+      {formResponse != false ? (
+        <ResponseBox
+          message={`${formResponse?.message}`}
+          status={`${formResponse?.status}`}
+        />
+      ) : (
+        ""
+      )}
+      {modalStatus != false ? (
+        <Modal modalType={modalTypeInfo} modalResponse={handleModalResponse} />
+      ) : (
+        ""
+      )}
       <nav>
         <div className="navLogo"></div>
         <ul>{renderNavItems(navItems)}</ul>

@@ -1,4 +1,4 @@
-function Search() {
+function Search(props: any) {
   return (
     <>
       <div id="searchContainer">

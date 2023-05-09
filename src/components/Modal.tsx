@@ -2,13 +2,16 @@ import CreatePost from "./CreatePost";
 import Search from "./Search";
 
 function Modal(props: any) {
+  const handleResponse = (data: any) => {
+    props.modalResponse(data);
+  };
   return (
     <>
       <div id="Modal">
         {props.modalType == "Search" ? (
-          <Search />
+          <Search response={handleResponse} />
         ) : props.modalType == "Create" ? (
-          <CreatePost />
+          <CreatePost response={handleResponse} />
         ) : (
           ""
         )}
