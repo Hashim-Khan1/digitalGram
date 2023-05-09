@@ -9,6 +9,7 @@ const {
   isUserExists,
   verifyPassword,
   createUserInfo,
+  getUserInfoData,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -70,5 +71,17 @@ router.post("/login", async (req, res) => {
       status: "unsuccessful",
     });
   }
+});
+router.post("/user-data", async (req, res) => {
+  const { username } = req.body;
+  const response = await isUserExists(username);
+  const { userID } = await isUserExists(username);
+  const res2 = await getUserInfoData(userID);
+  const res3 = { ...response, ...res2 };
+  res.status(201).send({ profileData: res3 });
+});
+router.post("/update-user-details", async (req, res) => {
+  const { data } = req.body;
+  const parseData = JSON.parse(data);
 });
 module.exports = router;
