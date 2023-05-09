@@ -96,7 +96,8 @@ function CreatePost(props: any) {
               id="captionInput"
               name="caption"
               className="searchInpt"
-              placeholder="Add caption max"
+              maxLength={350}
+              placeholder="Add caption max 350 characters"
             ></textarea>
 
             <input
