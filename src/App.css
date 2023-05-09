@@ -379,7 +379,9 @@ textarea{
   background-color: #1b1d20;
   margin-top: 10px;
   cursor: pointer;
-
+}
+#captionInput{
+  height: 180px;
 }
 @media only screen and (max-width:1920px) {
   nav{
