@@ -26,15 +26,26 @@ const hashPassword = async (password) => {
   return bcrypt.hashSync(password, salt);
 };
 
-const createUser = async (email, username, password) => {
-  const UUID = uuidv4();
+const createUser = async (email, username, password, UUID) => {
   conn.execute(
     "INSERT INTO users (email,username,password,userID) VALUES (?,?,?,?)",
     [email, username, password, UUID]
   );
 };
+const createUserInfo = (UserID, name) => {
+  conn.execute("INSERT INTO usersInfo (userID,name) VALUES (?,?)", [
+    UserID,
+    name,
+  ]);
+};
 const verifyPassword = async (plainPassword, hashedPassword) => {
   return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 
-module.exports = { hashPassword, createUser, isUserExists, verifyPassword };
+module.exports = {
+  hashPassword,
+  createUser,
+  isUserExists,
+  verifyPassword,
+  createUserInfo,
+};
