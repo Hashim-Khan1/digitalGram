@@ -41,11 +41,20 @@ const createUserInfo = (UserID, name) => {
 const verifyPassword = async (plainPassword, hashedPassword) => {
   return bcrypt.compareSync(plainPassword, hashedPassword);
 };
-
+const getUserInfoData = async (UUID) => {
+  const res = conn
+    .promise()
+    .execute("SELECT * FROM usersInfo WHERE userID = ? ", [UUID])
+    .then(([rows, fields]) => {
+      return rows[0];
+    });
+  return res;
+};
 module.exports = {
   hashPassword,
   createUser,
   isUserExists,
   verifyPassword,
   createUserInfo,
+  getUserInfoData,
 };
