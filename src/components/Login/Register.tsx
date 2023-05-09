@@ -7,6 +7,7 @@ function Register(props: any) {
     email: "",
     password: "",
     username: "",
+    name: "",
   });
   const udpateValues = (e: any) => {
     const key = e.currentTarget.name;
@@ -28,6 +29,13 @@ function Register(props: any) {
   };
   return (
     <>
+      <input
+        type="text"
+        className="inputField"
+        placeholder="Name"
+        onChange={udpateValues}
+        name="name"
+      />
       <input
         type="text"
         className="inputField"
