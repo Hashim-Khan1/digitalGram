@@ -328,6 +328,7 @@ nav ul li p{
   width: 350px;
   padding: 10px 20px;
   margin: 0px auto;
+  z-index: 3;
 }
 #Modal{
   display: flex;
