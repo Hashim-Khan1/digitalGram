@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
+const { v4: uuidv4 } = require("uuid");
+
 const {
   hashPassword,
   createUser,
   isUserExists,
   verifyPassword,
+  createUserInfo,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -14,13 +17,16 @@ router.use(bodyParser.json());
 router.post("/create-user", async (req, res) => {
   const { data } = req.body;
   const parseData = JSON.parse(data);
-  const { email, username, password } = parseData;
+  const { email, username, password, name } = parseData;
+  const UUID = uuidv4();
 
   const hashedPassword = await hashPassword(password);
 
   if ((await isUserExists(username)) == false) {
     console.log("user doesnt exist, create the user");
-    createUser(email, username, hashedPassword);
+    createUser(email, username, hashedPassword, UUID);
+    createUserInfo(UUID, name);
+
     res.status(201).send({
       message: "User successfully created",
       status: "successful",
