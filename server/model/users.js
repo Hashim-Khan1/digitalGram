@@ -122,21 +122,23 @@ const updateUserAvaliability = async (
       if (changeEmail && changeUsername) {
         response.userMessage = "Both username and email are valid, updating";
         response.userStatus = "successful";
-        updateUser("users", "email", clientUsername, userID);
-        updateUser("users", "username", clientEmail, userID);
+        updateUser("users", "email", clientEmail, userID);
+        updateUser("users", "username", clientUsername, userID);
       } else if (!changeEmail && !changeUsername) {
         response.userMessage = "Both Username and Email are already in use";
       } else if (!changeUsername) {
-        response.userMessage = "Username already taken";
+        updateUser("users", "email", clientEmail, userID);
+        response.userMessage = "Username already taken, Email changed only";
       } else {
-        response.userMessage = "Email already taken";
+        response.userMessage = "Email already taken, Username changed only";
+        updateUser("users", "username", clientUsername, userID);
       }
       break;
     case "Username Change":
       changeUsername = await isAvailable("username", clientUsername);
 
       if (changeUsername) {
-        updateUser("users", "username", clientEmail, userID);
+        updateUser("users", "username", clientUsername, userID);
         response.userMessage = "Username available, updating";
         response.userStatus = "successful";
       } else {
@@ -147,7 +149,7 @@ const updateUserAvaliability = async (
       changeEmail = await isAvailable("email", clientEmail);
 
       if (changeEmail) {
-        updateUser("users", "email", clientUsername, userID);
+        updateUser("users", "email", clientEmail, userID);
         response.userMessage = "Email available, updating";
         response.userStatus = "successful";
       } else {
