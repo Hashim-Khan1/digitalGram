@@ -10,6 +10,7 @@ const {
   verifyPassword,
   createUserInfo,
   getUserInfoData,
+  isAvailable,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -21,22 +22,32 @@ router.post("/create-user", async (req, res) => {
   const { email, username, password, name } = parseData;
   const UUID = uuidv4();
 
-  const hashedPassword = await hashPassword(password);
-
-  if ((await isUserExists(username)) == false) {
-    console.log("user doesnt exist, create the user");
+  if (
+    (await isAvailable("email", email)) == false &&
+    (await isAvailable("username", username)) == false
+  ) {
+    res.status(201).send({
+      message: "Both username and Email already in use",
+      status: "unsuccessful",
+    });
+  } else if ((await isAvailable("email", email)) == false) {
+    res.status(201).send({
+      message: "Email already in use",
+      status: "unsuccessful",
+    });
+  } else if ((await isAvailable("username", username)) == false) {
+    res.status(201).send({
+      message: "Username already in use",
+      status: "unsuccessful",
+    });
+  } else {
+    const hashedPassword = await hashPassword(password);
     createUser(email, username, hashedPassword, UUID);
     createUserInfo(UUID, name);
 
     res.status(201).send({
       message: "User successfully created",
       status: "successful",
-    });
-  } else {
-    console.log("user exists use different username or email");
-    res.status(201).send({
-      message: "Email or username already in use",
-      status: "unsuccessful",
     });
   }
 });
@@ -82,6 +93,5 @@ router.post("/user-data", async (req, res) => {
 });
 router.post("/update-user-details", async (req, res) => {
   const { data } = req.body;
-  const parseData = JSON.parse(data);
 });
 module.exports = router;
