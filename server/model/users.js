@@ -50,29 +50,6 @@ const getUserInfoData = async (UUID) => {
     });
   return res;
 };
-const detectChange = async (
-  userInputUsername,
-  userInputEmail,
-  fromClientUser
-) => {
-  const { username, email } = await isUserExists(fromClientUser);
-  let res;
-  switch (true) {
-    case userInputUsername !== username && userInputEmail !== email:
-      res = "change both";
-      break;
-    case userInputUsername !== username:
-      res = "UsernameChange";
-      break;
-    case userInputEmail !== email:
-      res = "Email Change";
-      break;
-    default:
-      res = "no change";
-      break;
-  }
-  return res;
-};
 const isAvailable = async (column, value) => {
   const res = conn
     .promise()
@@ -86,6 +63,104 @@ const isAvailable = async (column, value) => {
     });
   return res;
 };
+const detectChange = async (
+  userInputUsername,
+  userInputEmail,
+  fromClientUser
+) => {
+  let res;
+  const { username, email } = await isUserExists(fromClientUser);
+  switch (true) {
+    case userInputUsername !== username && userInputEmail !== email:
+      res = "Change Both";
+      break;
+    case userInputUsername !== username:
+      res = "Username Change";
+      break;
+    case userInputEmail !== email:
+      res = "Email Change";
+      break;
+    default:
+      res = "No Change";
+      break;
+  }
+  return res;
+};
+const updateUser = (table, column, value, conditionValue) => {
+  conn.query("UPDATE ?? SET ?? = ? WHERE userID = ?", [
+    table,
+    column,
+    value,
+    conditionValue,
+  ]);
+};
+
+const updateUserAvaliability = async (
+  clientUsername,
+  clientEmail,
+  fromClientUser
+) => {
+  const changeWhat = await detectChange(
+    clientUsername,
+    clientEmail,
+    fromClientUser
+  );
+  const { userID } = await isUserExists(fromClientUser);
+
+  let changeEmail;
+  let changeUsername;
+  let response = {
+    userMessage: "",
+    userStatus: "unsuccessful",
+    change: changeWhat,
+  };
+
+  switch (changeWhat) {
+    case "Change Both":
+      changeEmail = await isAvailable("email", clientEmail);
+      changeUsername = await isAvailable("username", clientUsername);
+      if (changeEmail && changeUsername) {
+        response.userMessage = "Both username and email are valid, updating";
+        response.userStatus = "successful";
+        updateUser("users", "email", clientUsername, userID);
+        updateUser("users", "username", clientEmail, userID);
+      } else if (!changeEmail && !changeUsername) {
+        response.userMessage = "Both Username and Email are already in use";
+      } else if (!changeUsername) {
+        response.userMessage = "Username already taken";
+      } else {
+        response.userMessage = "Email already taken";
+      }
+      break;
+    case "Username Change":
+      changeUsername = await isAvailable("username", clientUsername);
+
+      if (changeUsername) {
+        updateUser("users", "username", clientEmail, userID);
+        response.userMessage = "Username available, updating";
+        response.userStatus = "successful";
+      } else {
+        response.userMessage = "Username taken";
+      }
+      break;
+    case "Email Change":
+      changeEmail = await isAvailable("email", clientEmail);
+
+      if (changeEmail) {
+        updateUser("users", "email", clientUsername, userID);
+        response.userMessage = "Email available, updating";
+        response.userStatus = "successful";
+      } else {
+        response.userMessage = "Email already in use";
+      }
+      break;
+    default:
+      response.userMessage = "No changes needed";
+      break;
+  }
+  return response;
+};
+
 module.exports = {
   hashPassword,
   createUser,
@@ -94,4 +169,6 @@ module.exports = {
   createUserInfo,
   getUserInfoData,
   isAvailable,
+  updateUser,
+  updateUserAvaliability,
 };
