@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const conn = mysql.createConnection(process.env.DATABASE_URL);
 
-const isUserExists = async (username, email) => {
+const isUserExists = async (username) => {
   const res = conn
     .promise()
     .query("SELECT * FROM users WHERE username = ? OR email = ? ", [
@@ -50,6 +50,42 @@ const getUserInfoData = async (UUID) => {
     });
   return res;
 };
+const detectChange = async (
+  userInputUsername,
+  userInputEmail,
+  fromClientUser
+) => {
+  const { username, email } = await isUserExists(fromClientUser);
+  let res;
+  switch (true) {
+    case userInputUsername !== username && userInputEmail !== email:
+      res = "change both";
+      break;
+    case userInputUsername !== username:
+      res = "UsernameChange";
+      break;
+    case userInputEmail !== email:
+      res = "Email Change";
+      break;
+    default:
+      res = "no change";
+      break;
+  }
+  return res;
+};
+const isAvailable = async (column, value) => {
+  const res = conn
+    .promise()
+    .query("SELECT * FROM users WHERE ??=?", [column, value])
+    .then(([rows, fields]) => {
+      if (rows.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  return res;
+};
 module.exports = {
   hashPassword,
   createUser,
@@ -57,4 +93,5 @@ module.exports = {
   verifyPassword,
   createUserInfo,
   getUserInfoData,
+  isAvailable,
 };
