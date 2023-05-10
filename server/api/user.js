@@ -11,6 +11,8 @@ const {
   createUserInfo,
   getUserInfoData,
   isAvailable,
+  updateUser,
+  updateUserAvaliability,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -20,7 +22,6 @@ router.post("/create-user", async (req, res) => {
   const { data } = req.body;
   const parseData = JSON.parse(data);
   const { email, username, password, name } = parseData;
-  const UUID = uuidv4();
 
   if (
     (await isAvailable("email", email)) == false &&
@@ -41,6 +42,7 @@ router.post("/create-user", async (req, res) => {
       status: "unsuccessful",
     });
   } else {
+    const UUID = uuidv4();
     const hashedPassword = await hashPassword(password);
     createUser(email, username, hashedPassword, UUID);
     createUserInfo(UUID, name);
@@ -92,6 +94,26 @@ router.post("/user-data", async (req, res) => {
   res.status(201).send({ profileData: res3 });
 });
 router.post("/update-user-details", async (req, res) => {
-  const { data } = req.body;
+  const { clientEmail, clientUsername, fromUser, bio, name } = req.body;
+  const { userID } = await isUserExists(fromUser);
+  const JWTtoken = await createJWT(fromUser, "jwt");
+  const userResponse = await updateUserAvaliability(
+    clientUsername,
+    clientEmail,
+    fromUser
+  );
+  let response = {
+    bio: "Updated",
+    name: "Updated",
+    authToken: JWTtoken,
+    ...userResponse,
+  };
+  console.log(userResponse);
+  updateUser("usersInfo", "name", name, userID);
+  updateUser("usersInfo", "bio", bio, userID);
+  console.log(response, "Endpoint");
+  res.status(201).send({
+    updateRequest: "",
+  });
 });
 module.exports = router;
