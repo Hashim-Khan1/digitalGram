@@ -383,6 +383,21 @@ textarea{
 #captionInput{
   height: 180px;
 }
+#errBox,#successBox{
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px 12px;
+}
+#errBox{
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+#successBox{
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+}
 @media only screen and (max-width:1920px) {
   nav{
     width: 270px;
