@@ -94,26 +94,26 @@ router.post("/user-data", async (req, res) => {
   res.status(201).send({ profileData: res3 });
 });
 router.post("/update-user-details", async (req, res) => {
-  const { clientEmail, clientUsername, fromUser, bio, name } = req.body;
+  const { email, username, fromUser, bio, name } = req.body;
   const { userID } = await isUserExists(fromUser);
-  const JWTtoken = await createJWT(fromUser, "jwt");
-  const userResponse = await updateUserAvaliability(
-    clientUsername,
-    clientEmail,
-    fromUser
-  );
+
+  const userResponse = await updateUserAvaliability(username, email, fromUser);
   let response = {
-    bio: "Updated",
-    name: "Updated",
-    authToken: JWTtoken,
     ...userResponse,
   };
   console.log(userResponse);
+  if (
+    userResponse.success.successMsg == "Username changed only" ||
+    userResponse.success.successMsg ==
+      "Both username and email are valid, updating"
+  ) {
+    const JWTtoken = await createJWT(fromUser, "jwt");
+    response.authToken = JWTtoken;
+  }
+  response.success.userInfo = "Bio and name changed";
   updateUser("usersInfo", "name", name, userID);
   updateUser("usersInfo", "bio", bio, userID);
   console.log(response, "Endpoint");
-  res.status(201).send({
-    updateRequest: response,
-  });
+  res.status(201).send(response);
 });
 module.exports = router;
