@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
-
+const path = require("path");
+const multer = require("multer");
 const {
   hashPassword,
   createUser,
@@ -18,6 +19,16 @@ const { createJWT } = require("../model/Token");
 
 router.use(bodyParser.json());
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../src/uploads/profile");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
 router.post("/create-user", async (req, res) => {
   const { data } = req.body;
   const parseData = JSON.parse(data);
@@ -115,5 +126,14 @@ router.post("/update-user-details", async (req, res) => {
   updateUser("usersInfo", "bio", bio, userID);
   console.log(response, "Endpoint");
   res.status(201).send(response);
+});
+router.post("/update-profilepic", upload.single("files"), async (req, res) => {
+  const { username } = req.body;
+  const { userID } = await isUserExists(username);
+  const imgURL = req.file.filename;
+  updateUser("usersInfo", "profilepicurl", imgURL, userID);
+  res.status(201).send({
+    message: "Profile successfully updated",
+  });
 });
 module.exports = router;
