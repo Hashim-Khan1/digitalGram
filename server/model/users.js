@@ -162,7 +162,6 @@ const updateUserAvaliability = async (
   }
   return response;
 };
-
 module.exports = {
   hashPassword,
   createUser,

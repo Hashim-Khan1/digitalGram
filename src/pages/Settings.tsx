@@ -19,10 +19,16 @@ export default function SettingsPage() {
     bio: "",
     email: "",
   });
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
   const [clicked, setClicked] = useState(false);
   const [err, setErr] = useState({});
   const [successMsg, setSuccessMsg] = useState({});
   const [imageSrc, setImageSrc] = useState("");
+  const [imageFile, setImgFile] = useState();
 
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
@@ -75,12 +81,31 @@ export default function SettingsPage() {
     if (!file) {
       return;
     }
+    setImgFile(file);
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
       setImageSrc(result);
     };
     reader.readAsDataURL(file);
+  };
+  const handlePictureSubmit = async (e) => {
+    const { data } = userInfo;
+
+    e.preventDefault();
+    console.log(imageFile);
+    console.log(data);
+
+    const formData = new FormData();
+    formData.append("files", imageFile);
+    formData.append("username", data);
+    const res = await instance.post(
+      "/user/update-profilepic",
+      formData,
+      config
+    );
+    console.log(res.data);
+    setSuccessMsg(res.data);
   };
   useEffect(() => {
     if (userInfo) {
@@ -126,6 +151,7 @@ export default function SettingsPage() {
                 value="Upload pic"
                 className="submitDark"
                 style={{ margin: "10px 0" }}
+                onClick={handlePictureSubmit}
               />
             </form>
 
