@@ -22,7 +22,6 @@ function Login() {
     setFormResponse(data);
     if (data.isAuth == true) {
       Cookies.set("authToken", data.authToken, { expires: 7 });
-
       setTimeout(() => {
         console.log("yola");
         navigate("/home");

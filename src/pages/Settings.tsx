@@ -2,18 +2,27 @@ import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import Auth from "../hooks/Auth";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+
 const { VITE_API_URL } = import.meta.env;
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const instance = axios.create({
     baseURL: VITE_API_URL,
   });
   const userInfo = Auth();
+
   const [formDetails, setFormDetails] = useState({
     username: "",
     name: "",
     bio: "",
     email: "",
   });
+  const [clicked, setClicked] = useState(false);
+  const [err, setErr] = useState({});
+  const [successMsg, setSuccessMsg] = useState({});
+
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
     setFormDetails((prev) => ({
@@ -21,8 +30,22 @@ export default function SettingsPage() {
       [name]: value,
     }));
   };
-  const handleSubmit = () => {
-    console.log(formDetails);
+  const handleSubmit = async () => {
+    const { data } = userInfo;
+    const formData = { ...formDetails, fromUser: data };
+    const res = await instance.post("/user/update-user-details", formData);
+    console.log(res.data);
+    setErr(res.data.error);
+    setSuccessMsg(res.data.success);
+
+    if (res.data.authToken) {
+      console.log("Update cookie ");
+      Cookies.remove("authToken");
+      setClicked(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 3500);
+    }
   };
   const getUserData = async (User) => {
     const { data } = User;
@@ -38,6 +61,12 @@ export default function SettingsPage() {
     }
 
     console.log(res.data.profileData);
+  };
+  const renderItems = (upDateWhat) => {
+    console.log(upDateWhat, "Yes");
+    return Object.values(upDateWhat).map((items) => {
+      return <p>{items}</p>;
+    });
   };
   useEffect(() => {
     if (userInfo) {
@@ -123,7 +152,7 @@ export default function SettingsPage() {
                   type="submit"
                   value="Update"
                   className="submitDark"
-                  onClick={handleSubmit}
+                  onClick={clicked ? null : handleSubmit}
                   style={{ margin: "10px 0" }}
                 />
                 <p>
@@ -141,6 +170,16 @@ export default function SettingsPage() {
               margin: "25px 0 10px 0",
             }}
           />
+          {Object.keys(successMsg).length != 0 ? (
+            <div id="successBox">{renderItems(successMsg)}</div>
+          ) : (
+            ""
+          )}
+          {Object.keys(err).length != 0 ? (
+            <div id="errBox">{renderItems(err)}</div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>
