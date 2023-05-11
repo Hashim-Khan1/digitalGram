@@ -22,6 +22,7 @@ export default function SettingsPage() {
   const [clicked, setClicked] = useState(false);
   const [err, setErr] = useState({});
   const [successMsg, setSuccessMsg] = useState({});
+  const [imageSrc, setImageSrc] = useState("");
 
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
@@ -68,6 +69,19 @@ export default function SettingsPage() {
       return <p>{items}</p>;
     });
   };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setImageSrc(result);
+    };
+    reader.readAsDataURL(file);
+  };
   useEffect(() => {
     if (userInfo) {
       getUserData(userInfo);
@@ -86,7 +100,34 @@ export default function SettingsPage() {
           }}
         >
           <div id="profileHeader" className="row">
-            <div id="profileLarge"></div>
+            <form
+              action=""
+              encType="multipart/form-data"
+              style={{ display: "flex", flexDirection: "column" }}
+              method="post"
+            >
+              <img
+                id="profileLarge"
+                src={imageSrc}
+                style={{ border: "1px solid red" }}
+              />
+              <label htmlFor="changeProfile"></label>
+              <label htmlFor="upload-photo" id="" style={{ cursor: "pointer" }}>
+                + Change profile pic
+              </label>
+              <input
+                type="file"
+                name="files"
+                id="upload-photo"
+                onChange={handleUpload}
+              />
+              <input
+                type="submit"
+                value="Upload pic"
+                className="submitDark"
+                style={{ margin: "10px 0" }}
+              />
+            </form>
 
             <div>
               <div id="profileControls">
