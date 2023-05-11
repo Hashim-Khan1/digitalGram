@@ -113,7 +113,7 @@ router.post("/update-user-details", async (req, res) => {
   updateUser("usersInfo", "bio", bio, userID);
   console.log(response, "Endpoint");
   res.status(201).send({
-    updateRequest: "",
+    updateRequest: response,
   });
 });
 module.exports = router;
