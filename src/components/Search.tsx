@@ -1,20 +1,20 @@
+import { useState } from "react";
 import UserSearchContainer from "./UserSearchContainer";
 import axios from "axios";
-
 const { VITE_API_URL } = import.meta.env;
 
 function Search(props: any) {
+  const [userProfiles, SETuserProfiles] = useState([]);
   const handleChange = async (e: any) => {
     const { value } = e.currentTarget;
-    console.log("ss");
     if (value == "" || undefined) {
-      console.log("undefined");
+      SETuserProfiles([]);
     } else {
       const instance = axios.create({ baseURL: VITE_API_URL });
       const res = await instance.post("/user/search", {
         users: value,
       });
-      console.log(value, "valyue");
+      SETuserProfiles(res.data.TotalAvaliableUsers);
     }
   };
   return (
@@ -29,7 +29,9 @@ function Search(props: any) {
           />
           <div id="search"></div>
         </div>
-        <UserSearchContainer username="YolaAboyt" />
+        {userProfiles.map((index) => {
+          return <UserSearchContainer username={index.username} />;
+        })}
       </div>
     </>
   );
