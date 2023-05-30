@@ -162,6 +162,20 @@ const updateUserAvaliability = async (
   }
   return response;
 };
+const searchUsers = async (usernmae) => {
+  const query =
+    'SELECT * FROM your_table WHERE your_column LIKE CONCAT("%", ?, "%")';
+
+  const res = conn
+    .promise()
+    .query('SELECT * FROM users WHERE username LIKE CONCAT("%", ?, "%")', [
+      usernmae,
+    ])
+    .then(([rows, fields]) => {
+      console.log(rows);
+    });
+};
+
 module.exports = {
   hashPassword,
   createUser,
@@ -172,4 +186,5 @@ module.exports = {
   isAvailable,
   updateUser,
   updateUserAvaliability,
+  searchUsers,
 };
