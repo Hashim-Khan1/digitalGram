@@ -113,7 +113,6 @@ router.post("/update-user-details", async (req, res) => {
   let response = {
     ...userResponse,
   };
-  console.log(userResponse);
   if (
     userResponse.success.successMsg == "Username changed only" ||
     userResponse.success.successMsg ==
@@ -139,7 +138,6 @@ router.post("/update-profilepic", upload.single("files"), async (req, res) => {
 });
 router.post("/search", async (req, res) => {
   const { users } = req.body;
-
   const totalUsers = await searchUsers(users);
   res.status(201).send({
     TotalAvaliableUsers: totalUsers,

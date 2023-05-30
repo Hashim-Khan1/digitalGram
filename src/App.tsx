@@ -7,6 +7,7 @@ import Inbox from "./pages/Inbox";
 import Profile from "./pages/Profile";
 import AuthPage from "./pages/Login";
 import SettingsPage from "./pages/Settings";
+import Users from "./pages/Users";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<AuthPage />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Settings" element={<SettingsPage />} />
+        <Route path="/user/:users" element={<Users />} />
       </Routes>
     </div>
   );
