@@ -1,6 +1,5 @@
 const { Client } = require("cassandra-driver");
 require("dotenv").config();
-const multer = require("multer");
 const client = new Client({
   cloud: {
     secureConnectBundle: "./secure-connect-digitalgram.zip",

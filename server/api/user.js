@@ -14,6 +14,7 @@ const {
   isAvailable,
   updateUser,
   updateUserAvaliability,
+  searchUsers,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -134,6 +135,14 @@ router.post("/update-profilepic", upload.single("files"), async (req, res) => {
   updateUser("usersInfo", "profilepicurl", imgURL, userID);
   res.status(201).send({
     message: "Profile successfully updated",
+  });
+});
+router.post("/search", async (req, res) => {
+  const { users } = req.body;
+
+  const totalUsers = await searchUsers(users);
+  res.status(201).send({
+    TotalAvaliableUsers: totalUsers,
   });
 });
 module.exports = router;
