@@ -6,9 +6,7 @@ function Home() {
     <>
       <Nav />
       <div id="container">
-        <div className="mainBody">
-          <Posts />
-        </div>
+        <div className="mainBody">{/* <Posts /> */}</div>
       </div>
     </>
   );

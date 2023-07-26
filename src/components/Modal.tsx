@@ -1,5 +1,6 @@
 import CreatePost from "./CreatePost";
 import Search from "./Search";
+import ViewRequests from "./ViewRequests";
 
 function Modal(props: any) {
   const handleResponse = (data: any) => {
@@ -12,6 +13,18 @@ function Modal(props: any) {
           <Search response={handleResponse} />
         ) : props.modalType == "Create" ? (
           <CreatePost response={handleResponse} />
+        ) : props.modalType == "Requests" ? (
+          <ViewRequests
+            response={handleResponse}
+            actionBtn="Both"
+            requestType="IncomingRequests"
+          />
+        ) : props.modalType == "FriendsList" ? (
+          <ViewRequests
+            response={handleResponse}
+            actionBtn="Delete"
+            requestType="ConfirmedRequests"
+          />
         ) : (
           ""
         )}

@@ -3,22 +3,25 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const conn = mysql.createConnection(process.env.DATABASE_URL);
-
 const isUserExists = async (username) => {
-  const res = conn
-    .promise()
-    .query("SELECT * FROM users WHERE username = ? OR email = ? ", [
-      username,
-      username,
-    ])
-    .then(([rows, fields]) => {
-      if (rows.length > 0) {
-        return rows[0];
-      } else {
-        return false;
-      }
-    });
-  return res;
+  try {
+    const res = conn
+      .promise()
+      .query("SELECT * FROM users WHERE username = ? OR email = ? ", [
+        username,
+        username,
+      ])
+      .then(([rows, fields]) => {
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return false;
+        }
+      });
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const hashPassword = async (password) => {
@@ -42,6 +45,7 @@ const verifyPassword = async (plainPassword, hashedPassword) => {
   return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 const getUserInfoData = async (UUID) => {
+  console.log(UUID);
   const res = conn
     .promise()
     .execute("SELECT * FROM usersInfo WHERE userID = ? ", [UUID])
@@ -174,6 +178,82 @@ const searchUsers = async (usernmae) => {
   return res;
 };
 
+const isFriend = async (fromUser, TargetUser) => {
+  try {
+    const checkFriends = conn
+      .promise()
+      .query(
+        "SELECT * FROM friends WHERE fromuser = ? AND touser = ? OR touser = ? AND fromuser = ?",
+        [fromUser, TargetUser, fromUser, TargetUser]
+      )
+      .then(([rows, fields]) => {
+        if (rows.length >= 1) {
+          return rows[0];
+        } else {
+          return false;
+        }
+      });
+
+    return checkFriends;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+const addUser = async (fromUser, toUser, status) => {
+  const uniqueID = uuidv4();
+  const addedDate = new Date();
+  conn.execute(
+    "INSERT INTO friends (friend_ID,fromUser,toUser,status,lastActivity) VALUES (?,?,?,?,?)",
+    [uniqueID, fromUser, toUser, status, addedDate]
+  );
+};
+
+const updateFriend = (Column, Value, UserID) => {
+  conn.query("UPDATE friends SET ?? = ? WHERE friend_ID = ?", [
+    Column,
+    Value,
+    UserID,
+  ]);
+};
+
+const getAllFriendRequests = async (username) => {
+  try {
+    const res = conn
+      .promise()
+      .query("SELECT * FROM friends WHERE toUser = ? AND status= 'Pending' ", [
+        username,
+      ])
+      .then(([rows, fields]) => {
+        return rows;
+      });
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getAcceptedRequests = async (username) => {
+  try {
+    const res = conn
+      .promise()
+      .query(
+        "SELECT * FROM friends WHERE status = 'Accepted' AND toUser = ? OR fromUser = ?",
+        [username, username]
+      )
+      .then(([rows, fields]) => {
+        return rows;
+      });
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const removeRequest = (UUID) => {
+  conn.query("DELETE FROM friends WHERE friend_ID = ?", [UUID]);
+};
+
 module.exports = {
   hashPassword,
   createUser,
@@ -185,4 +265,10 @@ module.exports = {
   updateUser,
   updateUserAvaliability,
   searchUsers,
+  isFriend,
+  addUser,
+  getAllFriendRequests,
+  updateFriend,
+  removeRequest,
+  getAcceptedRequests,
 };

@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import AuthPage from "./pages/Login";
 import SettingsPage from "./pages/Settings";
 import Users from "./pages/Users";
+import PostPage from "./pages/PostPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Settings" element={<SettingsPage />} />
         <Route path="/user/:users" element={<Users />} />
+        <Route path="/post/:postID" element={<PostPage />} />
       </Routes>
     </div>
   );

@@ -27,7 +27,7 @@ export default function SettingsPage() {
   const [clicked, setClicked] = useState(false);
   const [err, setErr] = useState({});
   const [successMsg, setSuccessMsg] = useState({});
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageSrc, setImageSrc] = useState(``);
   const [imageFile, setImgFile] = useState();
 
   const handleOnChange = (e: any) => {
@@ -41,7 +41,6 @@ export default function SettingsPage() {
     const { data } = userInfo;
     const formData = { ...formDetails, fromUser: data };
     const res = await instance.post("/user/update-user-details", formData);
-    console.log(res.data);
     setErr(res.data.error);
     setSuccessMsg(res.data.success);
 
@@ -66,8 +65,9 @@ export default function SettingsPage() {
         bio: "",
       }));
     }
-
-    console.log(res.data.profileData);
+    setImageSrc(
+      VITE_API_URL + `/post/image/profile/` + res.data.profileData.profilepicurl
+    );
   };
   const renderItems = (upDateWhat) => {
     console.log(upDateWhat, "Yes");

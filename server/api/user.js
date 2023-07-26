@@ -15,6 +15,12 @@ const {
   updateUser,
   updateUserAvaliability,
   searchUsers,
+  isFriend,
+  addUser,
+  getAllFriendRequests,
+  updateFriend,
+  removeRequest,
+  getAcceptedRequests,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -22,7 +28,7 @@ router.use(bodyParser.json());
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../src/uploads/profile");
+    cb(null, "./uploads/profile");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -98,12 +104,17 @@ router.post("/login", async (req, res) => {
   }
 });
 router.post("/user-data", async (req, res) => {
-  const { username } = req.body;
-  const response = await isUserExists(username);
+  const { username, myUser } = req.body;
   const { userID } = await isUserExists(username);
-  const res2 = await getUserInfoData(userID);
-  const res3 = { ...response, ...res2 };
-  res.status(201).send({ profileData: res3 });
+  if (userID != undefined) {
+    const res2 = await getUserInfoData(userID);
+    const checkFriend = await isFriend(myUser, username);
+
+    const res3 = { ...res2, username, friendStatus: checkFriend };
+    res.status(201).send({ profileData: res3 });
+  } else {
+    res.status(201).send({ profileData: false });
+  }
 });
 router.post("/update-user-details", async (req, res) => {
   const { email, username, fromUser, bio, name } = req.body;
@@ -131,7 +142,8 @@ router.post("/update-profilepic", upload.single("files"), async (req, res) => {
   const { username } = req.body;
   const { userID } = await isUserExists(username);
   const imgURL = req.file.filename;
-  updateUser("usersInfo", "profilepicurl", imgURL, userID);
+  const imgName = imgURL.replace(/\.[^/.]+$/, "");
+  updateUser("usersInfo", "profilepicurl", imgName, userID);
   res.status(201).send({
     message: "Profile successfully updated",
   });
@@ -143,4 +155,59 @@ router.post("/search", async (req, res) => {
     TotalAvaliableUsers: totalUsers,
   });
 });
+router.post("/add-user", async (req, res) => {
+  const { fromUser, targetUser } = req.body;
+  const responseFromAddedUser = await isFriend(fromUser, targetUser);
+  console.log(responseFromAddedUser);
+  if (responseFromAddedUser == false) {
+    console.log("Request sent");
+    addUser(fromUser, targetUser, "Pending");
+    res.status(201).send({
+      message: "Login successfully",
+      status: "successful",
+    });
+  } else {
+    console.log("Request alreay exists");
+  }
+});
+router.get("/totalrequests/:clientUsername", async (req, res) => {
+  const { clientUsername } = req.params;
+  const requestData = await getAllFriendRequests(clientUsername);
+  const userData = await Promise.all(
+    requestData.map(async (index) => {
+      const { fromUser, friend_ID } = index;
+      const { userID } = await isUserExists(fromUser);
+      const userDataReturn = await getUserInfoData(userID);
+      let mapData = { ...userDataReturn, fromUser, friend_ID };
+      return mapData;
+    })
+  );
+  res.send(userData);
+});
+router.post("/accept-request", async (req, res) => {
+  const { friendID } = req.body;
+  updateFriend("status", "Accepted", friendID);
+  res.send("Data successfuylly updated");
+});
+router.post("/delete-request", async (req, res) => {
+  const { friendID } = req.body;
+  removeRequest(friendID);
+  res.send("User successfuylly Removed");
+});
+router.get("/acceptedRequests/:clientUsername", async (req, res) => {
+  const { clientUsername } = req.params;
+  console.log(clientUsername);
+  const requestData = await getAcceptedRequests(clientUsername);
+  const userData = await Promise.all(
+    requestData.map(async (index) => {
+      const { fromUser, friend_ID } = index;
+      const { userID } = await isUserExists(fromUser);
+      const userDataReturn = await getUserInfoData(userID);
+      let mapData = { ...userDataReturn, fromUser, friend_ID };
+      return mapData;
+    })
+  );
+  res.send(userData);
+});
+
 module.exports = router;
