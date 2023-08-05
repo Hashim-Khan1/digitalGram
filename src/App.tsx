@@ -9,6 +9,7 @@ import AuthPage from "./pages/Login";
 import SettingsPage from "./pages/Settings";
 import Users from "./pages/Users";
 import PostPage from "./pages/PostPage";
+import DirectMessage from "./pages/DirectMessage";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/user/:users" element={<Users />} />
         <Route path="/post/:postID" element={<PostPage />} />
         <Route path="/Inbox" element={<Inbox />}>
-          <Route path=":ID" element={<Inbox />} />
+          <Route path="t/:ID" element={<DirectMessage />} />
         </Route>
       </Routes>
     </div>

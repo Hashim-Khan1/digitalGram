@@ -3,8 +3,7 @@ import axios from "axios";
 import Auth from "../hooks/Auth";
 import Nav from "../components/Nav";
 import Users from "../components/Users";
-import FromMessages from "../components/messages/FromMessages";
-import ToMessages from "../components/messages/ToMessages";
+import { Outlet } from "react-router-dom";
 
 const { VITE_API_URL } = import.meta.env;
 function Inbox() {
@@ -26,48 +25,14 @@ function Inbox() {
       renderFriends(data);
     }
   };
-  const messagesFromUsers = (e) => {
-    console.log(e, "ID");
-  };
   const renderFriendsList = () => {
     return friendsList.map((index) => {
-      return <Users data={index} LoadData={messagesFromUsers} />;
+      return <Users data={index} />;
     });
   };
-  const renderMessages = () => {
-    return (
-      <>
-        <div id="msgHeader" className="row alignCenter">
-          <p style={{ fontSize: "18px" }}>Username</p>
-          <div className="navIcons phone" style={{ marginLeft: "auto" }}></div>
-        </div>
-        <div id="userMessages">
-          <FromMessages />
-          <ToMessages />
-        </div>
-        <div className="row">
-          <input
-            type="text"
-            className="inputField"
-            style={{ color: "black" }}
-          />
-          <div
-            style={{
-              marginLeft: "auto",
-              border: "1px solid rgba(128, 128, 128, 0.123) ",
-              padding: "5px 12px",
-              cursor: "pointer",
-            }}
-          >
-            SEND
-          </div>
-        </div>
-      </>
-    );
-  };
+
   useEffect(() => {
     renderItems(userInfo);
-    console.log(window.location.href);
   }, [userInfo]);
 
   return (
@@ -82,11 +47,8 @@ function Inbox() {
           <div id="userMsgContainer">{renderFriendsList()}</div>
 
           <div id="msgBody" style={{ width: "100%" }}>
-            {messages.length == 0 ? (
-              <h1>Click on a user to start messaging </h1>
-            ) : (
-              renderMessages()
-            )}
+            <h1>Click on a user to start messaging </h1>
+            <Outlet />
           </div>
         </div>
       </div>

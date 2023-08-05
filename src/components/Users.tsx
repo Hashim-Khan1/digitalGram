@@ -1,10 +1,11 @@
 const { VITE_API_URL } = import.meta.env;
+import { useNavigate } from "react-router-dom";
 
 function Users(props: any) {
-  console.log(props.data, "ttt");
+  const navigate = useNavigate();
   const getMessages = (e) => {
     const { id } = e.currentTarget;
-    props.LoadData(id);
+    navigate("/Inbox/t/" + id);
   };
   return (
     <>
