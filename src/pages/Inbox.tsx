@@ -20,7 +20,7 @@ function Inbox() {
     console.log(res);
     setFriendsList(res.data);
   };
-  const renderItems = (e) => {
+  const renderItems = (e: any) => {
     if (e) {
       const { data } = e;
       renderFriends(data);
@@ -67,6 +67,7 @@ function Inbox() {
   };
   useEffect(() => {
     renderItems(userInfo);
+    console.log(window.location.href);
   }, [userInfo]);
 
   return (

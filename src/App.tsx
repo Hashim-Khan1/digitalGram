@@ -15,12 +15,14 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/Inbox" element={<Inbox />} />
         <Route path="/" element={<AuthPage />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Settings" element={<SettingsPage />} />
         <Route path="/user/:users" element={<Users />} />
         <Route path="/post/:postID" element={<PostPage />} />
+        <Route path="/Inbox" element={<Inbox />}>
+          <Route path=":ID" element={<Inbox />} />
+        </Route>
       </Routes>
     </div>
   );
