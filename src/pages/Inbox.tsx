@@ -1,15 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Auth from "../hooks/Auth";
 import Nav from "../components/Nav";
 import Users from "../components/Users";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import MessageAuth from "../hooks/MessageAuth";
 
 const { VITE_API_URL } = import.meta.env;
 function Inbox() {
+  const navigate = useNavigate();
   const userInfo = Auth();
   const [friendsList, setFriendsList] = useState([]);
+  const [messageAuth, setmmessageAuth] = useState(false);
+
   const url = window.location.pathname;
   const pathName = url.split("/");
 
@@ -37,15 +40,21 @@ function Inbox() {
     renderItems(userInfo);
   }, [userInfo]);
   useEffect(() => {
-    if (pathName.length > 3 && userInfo) {
-      const { data } = userInfo;
-      const friendID = pathName.pop();
+    const fetchMessage = async () => {
+      if (pathName.length > 3 && userInfo) {
+        const { data } = userInfo;
+        const friendID = pathName.pop();
 
-      MessageAuth(data, friendID);
-      console.log("Message ID");
-    } else {
-      console.log("not direct");
-    }
+        const messageAuth = MessageAuth(data, friendID);
+        let messageResult = await messageAuth.checkAuth();
+        setmmessageAuth(messageResult);
+        if (messageResult == false) navigate("");
+        console.log("Message ID");
+      } else {
+        console.log("not direct");
+      }
+    };
+    fetchMessage();
   }, [pathName]);
   return (
     <>
@@ -59,7 +68,7 @@ function Inbox() {
           <div id="userMsgContainer">{renderFriendsList()}</div>
 
           <div id="msgBody" style={{ width: "100%" }}>
-            {pathName.length <= 3 ? (
+            {messageAuth == false ? (
               <h1>Click on a user to start messaging </h1>
             ) : (
               <Outlet />
