@@ -254,6 +254,43 @@ const removeRequest = (UUID) => {
   conn.query("DELETE FROM friends WHERE friend_ID = ?", [UUID]);
 };
 
+const selectFromFriendID = async (friendID) => {
+  try {
+    const res = await conn
+      .promise()
+      .query("SELECT * FROM friends WHERE friend_ID = ?", [friendID])
+      .then(([rows, fields]) => {
+        if (rows.length > 0) return rows[0];
+        return false;
+      });
+    return res;
+  } catch (err) {
+    return false;
+  }
+};
+const verifyID = async (friendID, fromUser) => {
+  let found = false;
+
+  const friendObj = await selectFromFriendID(friendID);
+  if (friendObj != false) {
+    console.log(friendObj);
+    for (const [key, value] of Object.entries(friendObj)) {
+      if (value === fromUser) {
+        // Perform actions with the matched key-value pair
+        console.log(`Found match: key=${key}, value=${value}`);
+        found = true;
+        break; // Exit the loop once a match is found
+      }
+    }
+
+    if (!found) {
+      return false;
+    }
+  } else {
+    return false;
+  }
+  return found;
+};
 module.exports = {
   hashPassword,
   createUser,
@@ -271,4 +308,5 @@ module.exports = {
   updateFriend,
   removeRequest,
   getAcceptedRequests,
+  verifyID,
 };

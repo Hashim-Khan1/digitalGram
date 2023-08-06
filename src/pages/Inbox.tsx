@@ -4,12 +4,14 @@ import Auth from "../hooks/Auth";
 import Nav from "../components/Nav";
 import Users from "../components/Users";
 import { Outlet } from "react-router-dom";
+import MessageAuth from "../hooks/MessageAuth";
 
 const { VITE_API_URL } = import.meta.env;
 function Inbox() {
   const userInfo = Auth();
   const [friendsList, setFriendsList] = useState([]);
-  const [messages, setMessages] = useState(["1"]);
+  const url = window.location.pathname;
+  const pathName = url.split("/");
 
   const instance = axios.create({
     baseURL: VITE_API_URL,
@@ -34,7 +36,17 @@ function Inbox() {
   useEffect(() => {
     renderItems(userInfo);
   }, [userInfo]);
+  useEffect(() => {
+    if (pathName.length > 3 && userInfo) {
+      const { data } = userInfo;
+      const friendID = pathName.pop();
 
+      MessageAuth(data, friendID);
+      console.log("Message ID");
+    } else {
+      console.log("not direct");
+    }
+  }, [pathName]);
   return (
     <>
       <Nav />
@@ -47,8 +59,11 @@ function Inbox() {
           <div id="userMsgContainer">{renderFriendsList()}</div>
 
           <div id="msgBody" style={{ width: "100%" }}>
-            <h1>Click on a user to start messaging </h1>
-            <Outlet />
+            {pathName.length <= 3 ? (
+              <h1>Click on a user to start messaging </h1>
+            ) : (
+              <Outlet />
+            )}
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ const {
   updateFriend,
   removeRequest,
   getAcceptedRequests,
+  verifyID,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -194,6 +195,12 @@ router.post("/delete-request", async (req, res) => {
   removeRequest(friendID);
   res.send("User successfuylly Removed");
 });
+router.post("/auth-message", async (req, res) => {
+  const { friendID, username } = req.body;
+  console.log(friendID, username);
+  console.log(await verifyID(friendID, username));
+});
+
 router.get("/acceptedRequests/:clientUsername", async (req, res) => {
   const { clientUsername } = req.params;
   console.log(clientUsername);
