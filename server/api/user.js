@@ -197,8 +197,10 @@ router.post("/delete-request", async (req, res) => {
 });
 router.post("/auth-message", async (req, res) => {
   const { friendID, username } = req.body;
-  console.log(friendID, username);
-  console.log(await verifyID(friendID, username));
+  const result = await verifyID(friendID, username);
+  res.status(201).send({
+    isAuth: result,
+  });
 });
 
 router.get("/acceptedRequests/:clientUsername", async (req, res) => {

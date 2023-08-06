@@ -273,11 +273,9 @@ const verifyID = async (friendID, fromUser) => {
 
   const friendObj = await selectFromFriendID(friendID);
   if (friendObj != false) {
-    console.log(friendObj);
     for (const [key, value] of Object.entries(friendObj)) {
       if (value === fromUser) {
         // Perform actions with the matched key-value pair
-        console.log(`Found match: key=${key}, value=${value}`);
         found = true;
         break; // Exit the loop once a match is found
       }
