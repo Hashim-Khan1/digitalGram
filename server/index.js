@@ -19,11 +19,11 @@ routes(app, { urlencodedParser });
 const PORT = 3000;
 
 const chat = new WebSocket.Server({ noServer: true, clientTracking: false });
+//Define an empty object
 const rooms = {};
 
 chat.on("connection", (ws, req, messageID) => {
   // Handle WebSocket messages and events
-  //Define an empty object
   //Make a unique id for the socket id
   ws.id = uuidv4();
   //This is the the room ID
@@ -31,8 +31,13 @@ chat.on("connection", (ws, req, messageID) => {
   ws.on("message", (message) => {
     //Create the room here
     if (!rooms[room]) rooms[room] = {};
+    //This will be an empty objecty
+    // console.log(rooms[room]);
     //Join the room
     rooms[room] = { ...rooms[room], [ws.id]: ws };
+    //This will be a room with an id, multiple people can have same ID now
+    // console.log(rooms[room]);
+
     //Sending the message to the websocket
     Object.values(rooms[room]).forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -40,8 +45,6 @@ chat.on("connection", (ws, req, messageID) => {
         client.send("Got ur message");
       }
     });
-    const parsedMessage = JSON.parse(message);
-    console.log("Received message:", parsedMessage);
   });
 });
 
