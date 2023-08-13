@@ -2,6 +2,17 @@ const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
+const { Client } = require("cassandra-driver");
+
+const client = new Client({
+  cloud: {
+    secureConnectBundle: "./secure-connect-digitalgram.zip",
+  },
+  credentials: {
+    username: `${process.env.clientID}`,
+    password: `${process.env.clientSecret}`,
+  },
+});
 const conn = mysql.createConnection(process.env.DATABASE_URL);
 const isUserExists = async (username) => {
   try {
@@ -280,7 +291,6 @@ const verifyID = async (friendID, fromUser) => {
         break; // Exit the loop once a match is found
       }
     }
-
     if (!found) {
       return false;
     }
@@ -288,6 +298,26 @@ const verifyID = async (friendID, fromUser) => {
     return false;
   }
   return found;
+};
+const sendMessage = (chatID, fromUser, toUser, message) => {
+  try {
+    const date = new Date();
+    const UUID = uuidv4();
+    const query =
+      "INSERT INTO useractivities.messages (messageid,chatid,fromuser,message,touser,date_column) VALUES(?,?,?,?,?,?)";
+    client.execute(query, [UUID, chatID, fromUser, message, toUser, date], {
+      prepare: true,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getMessageData = async (id) => {
+  const query =
+    "SELECT * FROM useractivities.messages WHERE chatid = ? ALLOW FILTERING;";
+  const showItems = await client.execute(query, [id], { prepare: true });
+  return showItems.rows;
+  // client.execute
 };
 module.exports = {
   hashPassword,
@@ -307,4 +337,7 @@ module.exports = {
   removeRequest,
   getAcceptedRequests,
   verifyID,
+  sendMessage,
+  selectFromFriendID,
+  getMessageData,
 };
