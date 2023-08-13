@@ -1,7 +1,7 @@
 function ToMessages(props: any) {
   return (
     <>
-      <div className="userMsg toMsg">Lorem ipsum dolor sit amet.</div>
+      <div className="userMsg toMsg">{props.message}</div>
     </>
   );
 }
