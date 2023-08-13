@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const { VITE_API_URL } = import.meta.env;
 
 function Auth() {
-  const [userinfo, setUserInfo] = useState(null); // Provide an initial value of null
+  const [userinfo, setUserInfo] = useState(null);
   const Navigate = useNavigate();
 
   const checkToken = async () => {
