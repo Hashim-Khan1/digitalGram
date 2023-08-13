@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import _ from "lodash";
 
+const { VITE_API_URL } = import.meta.env;
 import FromMessages from "./FromMessages";
 import ToMessages from "./ToMessages";
-import { useLocation } from "react-router-dom";
+import Auth from "../../hooks/Auth";
 
 function MessageBox(props: any) {
+  const instance = axios.create({ baseURL: VITE_API_URL });
+  const userInfo = Auth();
+
   const clientID = props.clientID;
-  const [message, setMessage] = useState("");
+  const [previousMessages, setpreviousMessages] = useState([]);
   const [ws, setWs] = useState(null);
   const [inputMessages, setinputMessages] = useState({
-    fromUser: "",
-    toUser: "",
-    friendID: "",
     userMessage: "",
   });
 
@@ -23,37 +26,85 @@ function MessageBox(props: any) {
     }));
   };
   const submitMessage = () => {
-    console.log(inputMessages, "User messages");
     if (ws && ws.readyState === WebSocket.OPEN) {
-      console.log("messageSent");
-      console.log("messageSent");
-
       ws.send(JSON.stringify(inputMessages));
-      // ws.send(); // Send the user's message
       setinputMessages((values) => ({
         ...values,
         userMessage: "", // Clear the input field after sending
       }));
     }
   };
+  const getFriendsParams = async (authData: any, id: string) => {
+    if (authData) {
+      let toUserMessage: string;
+      let fromUserMessage: string;
+      const { data } = authData;
+      const res = await instance.get("/user/getFriendsParams/" + id);
+      console.log(res.data.messages);
 
+      setpreviousMessages(res.data.messages);
+      const { friend_ID, fromUser, toUser } = res.data.friendInfo;
+      if (toUser == data) {
+        fromUserMessage = data;
+        toUserMessage = fromUser;
+      } else {
+        fromUserMessage = fromUser;
+        toUserMessage = toUser;
+      }
+      setinputMessages((values) => ({
+        ...values,
+        toUser: toUserMessage,
+        fromUser: fromUserMessage,
+        friendID: friend_ID,
+      }));
+    }
+  };
+  const renderMessages = (array) => {
+    if (userInfo) {
+      const { data } = userInfo;
+      return array.map((index) => {
+        if (index.fromuser == data) {
+          return <ToMessages message={index.message} />;
+        } else {
+          return <FromMessages message={index.message} />;
+        }
+      });
+    }
+  };
   useEffect(() => {
+    getFriendsParams(userInfo, clientID);
     const socket = new WebSocket("ws://localhost:3000/Inbox/t/" + clientID);
     setWs(socket);
     socket.onopen = () => {
       console.log("WebSocket Client Connected");
     };
-  }, [clientID]);
+  }, [clientID, userInfo]);
+  useEffect(() => {
+    if (ws) {
+      const handleReceiveMessage = (event) => {
+        const receivedMessage = JSON.parse(event.data);
+        setpreviousMessages((prevArray) => [...prevArray, receivedMessage]);
+      };
+
+      // Debounce the event handler to avoid multiple rapid executions
+      const debouncedHandler = _.debounce(handleReceiveMessage, 1000);
+
+      ws.addEventListener("message", debouncedHandler);
+
+      return () => {
+        // Cleanup and remove the event listener when the component unmounts
+        ws.removeEventListener("message", debouncedHandler);
+        ws.close();
+      };
+    }
+  }, [ws]);
   return (
     <>
       <div id="msgHeader" className="row alignCenter">
-        <p style={{ fontSize: "18px" }}>Username</p>
+        <p style={{ fontSize: "18px" }}>Message Center</p>
         <div className="navIcons phone" style={{ marginLeft: "auto" }}></div>
       </div>
-      <div id="userMessages">
-        <FromMessages />
-        <ToMessages />
-      </div>
+      <div id="userMessages">{renderMessages(previousMessages)}</div>
       <div className="row">
         <input
           type="text"
