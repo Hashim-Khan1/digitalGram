@@ -22,6 +22,8 @@ const {
   removeRequest,
   getAcceptedRequests,
   verifyID,
+  selectFromFriendID,
+  getMessageData,
 } = require("../model/users");
 const { createJWT } = require("../model/Token");
 
@@ -218,5 +220,13 @@ router.get("/acceptedRequests/:clientUsername", async (req, res) => {
   );
   res.send(userData);
 });
-
+router.get("/getFriendsParams/:friendID", async (req, res) => {
+  const { friendID } = req.params;
+  const result = await selectFromFriendID(friendID);
+  const messageResult = await getMessageData(friendID);
+  res.status(201).send({
+    friendInfo: result,
+    messages: messageResult,
+  });
+});
 module.exports = router;
