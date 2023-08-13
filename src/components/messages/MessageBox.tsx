@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import _ from "lodash";
-
 const { VITE_API_URL } = import.meta.env;
 import FromMessages from "./FromMessages";
 import ToMessages from "./ToMessages";
@@ -28,6 +27,7 @@ function MessageBox(props: any) {
   const submitMessage = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(inputMessages));
+      setpreviousMessages((previous) => [...previous, inputMessages]);
       setinputMessages((values) => ({
         ...values,
         userMessage: "", // Clear the input field after sending

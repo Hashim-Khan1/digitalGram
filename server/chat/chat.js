@@ -22,6 +22,7 @@ chat.on("connection", (ws, req, messageID) => {
     const parsedMessage = JSON.parse(message);
     const { userMessage, toUser, fromUser } = parsedMessage;
     sendMessage(messageID, fromUser, toUser, userMessage);
+    console.log(parsedMessage);
 
     //Sending the message to the websocket
     Object.values(rooms[room]).forEach((client) => {
