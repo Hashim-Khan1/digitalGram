@@ -19,7 +19,7 @@ function Inbox() {
   const instance = axios.create({
     baseURL: VITE_API_URL,
   });
-  const renderFriends = async (username) => {
+  const renderFriends = async (username: string) => {
     const res = await instance.get("/user/acceptedRequests/" + username);
     console.log(res);
     setFriendsList(res.data);
@@ -49,9 +49,6 @@ function Inbox() {
         let messageResult = await messageAuth.checkAuth();
         setmmessageAuth(messageResult);
         if (messageResult == false) navigate("");
-        console.log("Message ID");
-      } else {
-        console.log("not direct");
       }
     };
     fetchMessage();
