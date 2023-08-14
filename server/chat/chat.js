@@ -18,10 +18,10 @@ chat.on("connection", (ws, req, messageID) => {
   rooms[room] = { ...rooms[room], [ws.id]: ws };
   //This will be a room with an id, multiple people can have same ID now
   // console.log(rooms[room]);
-  ws.on("message", (message) => {
-    const parsedMessage = JSON.parse(message);
-    const { userMessage, toUser, fromUser } = parsedMessage;
-    sendMessage(messageID, fromUser, toUser, userMessage);
+  ws.on("message", (data) => {
+    const parsedMessage = JSON.parse(data);
+    const { message, touser, fromuser } = parsedMessage;
+    sendMessage(messageID, fromuser, touser, message);
     console.log(parsedMessage);
 
     //Sending the message to the websocket

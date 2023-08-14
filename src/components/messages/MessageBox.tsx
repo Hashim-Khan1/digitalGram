@@ -14,7 +14,7 @@ function MessageBox(props: any) {
   const [previousMessages, setpreviousMessages] = useState([]);
   const [ws, setWs] = useState(null);
   const [inputMessages, setinputMessages] = useState({
-    userMessage: "",
+    message: "",
   });
 
   const updateValues = (e) => {
@@ -26,11 +26,12 @@ function MessageBox(props: any) {
   };
   const submitMessage = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
+      console.log(inputMessages);
       ws.send(JSON.stringify(inputMessages));
       setpreviousMessages((previous) => [...previous, inputMessages]);
       setinputMessages((values) => ({
         ...values,
-        userMessage: "", // Clear the input field after sending
+        message: "", // Clear the input field after sending
       }));
     }
   };
@@ -53,8 +54,8 @@ function MessageBox(props: any) {
       }
       setinputMessages((values) => ({
         ...values,
-        toUser: toUserMessage,
-        fromUser: fromUserMessage,
+        touser: toUserMessage,
+        fromuser: fromUserMessage,
         friendID: friend_ID,
       }));
     }
@@ -83,6 +84,7 @@ function MessageBox(props: any) {
     if (ws) {
       const handleReceiveMessage = (event) => {
         const receivedMessage = JSON.parse(event.data);
+        console.log(previousMessages);
         setpreviousMessages((prevArray) => [...prevArray, receivedMessage]);
       };
 
@@ -110,9 +112,9 @@ function MessageBox(props: any) {
           type="text"
           className="inputField"
           style={{ color: "black" }}
-          name="userMessage"
+          name="message"
           onChange={updateValues}
-          value={inputMessages.userMessage}
+          value={inputMessages.message}
         />
         <div
           style={{
