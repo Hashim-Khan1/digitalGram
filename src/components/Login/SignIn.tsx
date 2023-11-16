@@ -1,9 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
+import validateInput from "./validate";
 const { VITE_API_URL } = import.meta.env;
 
+interface LoginForm {
+  email: String;
+  clientPassword: String;
+}
+
 function SignIn(props: any) {
-  const [FormValues, setFormValues] = useState({
+  const instance = axios.create({ baseURL: VITE_API_URL });
+
+  const [FormValues, setFormValues] = useState<LoginForm>({
     email: "",
     clientPassword: "",
   });
@@ -15,15 +23,25 @@ function SignIn(props: any) {
       [key]: name,
     }));
   };
-  const instance = axios.create({ baseURL: VITE_API_URL });
-  const submitForm = async (e: any) => {
-    const dataString = JSON.stringify(FormValues);
-    console.log(dataString);
 
-    const res = await instance.post("/user/login", {
-      data: dataString,
-    });
-    props.responseData(res.data);
+  const submitForm = async (e: any) => {
+    try {
+      const dataString = JSON.stringify(FormValues);
+      console.log(validateInput(FormValues, ""));
+      if (validateInput(FormValues, "") != false) {
+        const res = await instance.post("/user/login", {
+          data: dataString,
+        });
+        props.responseData(res.data);
+      } else {
+        props.responseData({
+          message: "Blank inputs not allowed",
+          status: "unsuccessful",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <>
