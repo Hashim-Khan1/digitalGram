@@ -10,7 +10,7 @@ function Posts(props: any) {
     const res = await instance.get("/post/info/" + props.postID);
     setpostData(res.data);
   };
-  const renderItems = (dataObj) => {
+  const renderItems = (dataObj: Object) => {
     if (Object.keys(dataObj).length == 0) {
       props.isActive("Post doesnt exist");
       return <p>Post doesnt exist</p>;

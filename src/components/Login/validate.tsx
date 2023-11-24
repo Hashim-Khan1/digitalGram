@@ -1,12 +1,13 @@
 const validateInput = (form: Object, regex: String) => {
   let err;
-  Object.values(form).map((value, index) => {
-    if (value == null || value == undefined || value == "") {
+  for (let key in form) {
+    if (form[key] == null || form[key] == undefined || form[key] == "") {
       err = false;
+      break;
     } else {
       err = true;
     }
-  });
+  }
   return err;
 };
 export default validateInput;

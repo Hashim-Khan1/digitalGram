@@ -5,11 +5,11 @@ const { VITE_API_URL } = import.meta.env;
 import FromMessages from "./FromMessages";
 import ToMessages from "./ToMessages";
 import Auth from "../../hooks/Auth";
+import validateInput from "../Login/validate";
 
 function MessageBox(props: any) {
   const instance = axios.create({ baseURL: VITE_API_URL });
   const userInfo = Auth();
-
   const clientID = props.clientID;
   const [previousMessages, setpreviousMessages] = useState([]);
   const [ws, setWs] = useState(null);
@@ -25,15 +25,24 @@ function MessageBox(props: any) {
     }));
   };
   const submitMessage = () => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      console.log(inputMessages);
-      ws.send(JSON.stringify(inputMessages));
-      setpreviousMessages((previous) => [...previous, inputMessages]);
-      setinputMessages((values) => ({
-        ...values,
-        message: "", // Clear the input field after sending
-      }));
-    }
+    try {
+      console.log(inputMessages, "ssss");
+      if (
+        validateInput(inputMessages, "") != false &&
+        ws &&
+        ws.readyState === WebSocket.OPEN
+      ) {
+        console.log(inputMessages);
+        ws.send(JSON.stringify(inputMessages));
+        setpreviousMessages((previous) => [...previous, inputMessages]);
+        setinputMessages((values) => ({
+          ...values,
+          message: "", // Clear the input field after sending
+        }));
+      } else {
+        console.log("Empty Input");
+      }
+    } catch (err) {}
   };
   const getFriendsParams = async (authData: any, id: string) => {
     if (authData) {

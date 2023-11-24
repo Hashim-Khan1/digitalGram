@@ -40,7 +40,10 @@ function SignIn(props: any) {
         });
       }
     } catch (err) {
-      console.log(err);
+      props.responseData({
+        message: err.message,
+        status: "unsuccessful",
+      });
     }
   };
   return (
